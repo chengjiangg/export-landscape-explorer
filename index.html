@@ -1,0 +1,2407 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Export Landscape Explorer – Department of Statistics Singapore
+    </title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+      :root {
+        --dos-blue: #003b71;
+        --dos-blue-light: #0058a8;
+        --dos-blue-pale: #e8f0f8;
+        --dos-red: #cf152d;
+        --dos-red-dark: #a81123;
+        --dos-gray-100: #f5f6f7;
+        --dos-gray-200: #e8eaed;
+        --dos-gray-300: #d1d5db;
+        --dos-gray-400: #9ca3af;
+        --dos-gray-500: #6b7280;
+        --dos-gray-700: #374151;
+        --dos-gray-900: #1f2937;
+        --dos-white: #ffffff;
+        --dos-success: #0a7c42;
+        --dos-success-pale: #e6f5ed;
+        --dos-warning: #c67f07;
+        --dos-warning-pale: #fff5e0;
+        --dos-info: #0058a8;
+        --dos-info-pale: #e8f0f8;
+        --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+        --radius: 4px;
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Source Sans 3", "Segoe UI", sans-serif;
+        background: var(--dos-gray-100);
+        color: var(--dos-gray-900);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── MASTHEAD ── */
+      .sg-masthead {
+        background: var(--dos-gray-200);
+        padding: 6px 0;
+        font-size: 12px;
+        color: var(--dos-gray-500);
+        border-bottom: 1px solid var(--dos-gray-300);
+      }
+      .sg-masthead .container {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* ── HEADER ── */
+      .site-header {
+        background: var(--dos-white);
+        border-bottom: 3px solid var(--dos-red);
+        box-shadow: var(--shadow-sm);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .site-header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 68px;
+      }
+      .logo-group {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        text-decoration: none;
+      }
+      .header-nav {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+      .header-nav a {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dos-gray-700);
+        text-decoration: none;
+        padding: 4px 0;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+      }
+      .header-nav a:hover,
+      .header-nav a.active {
+        color: var(--dos-blue);
+        border-bottom-color: var(--dos-red);
+      }
+      .container {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      /* ── HERO ── */
+      .hero {
+        background: linear-gradient(
+          135deg,
+          var(--dos-blue) 0%,
+          #004d8f 50%,
+          #00325e 100%
+        );
+        padding: 48px 0 52px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -40%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(255, 255, 255, 0.04) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: var(--dos-red);
+      }
+      .hero .container {
+        position: relative;
+        z-index: 1;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 5px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 0.3px;
+        margin-bottom: 18px;
+        text-transform: uppercase;
+      }
+      .hero-badge .dot {
+        width: 6px;
+        height: 6px;
+        background: var(--dos-red);
+        border-radius: 50%;
+      }
+      .hero h1 {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--dos-white);
+        margin-bottom: 10px;
+        letter-spacing: -0.3px;
+      }
+      .hero p {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.75);
+        max-width: 640px;
+        line-height: 1.6;
+      }
+
+      /* ── BREADCRUMB ── */
+      .breadcrumb-bar {
+        background: var(--dos-white);
+        border-bottom: 1px solid var(--dos-gray-200);
+        padding: 10px 0;
+      }
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--dos-gray-500);
+      }
+      .breadcrumb a {
+        color: var(--dos-blue-light);
+        text-decoration: none;
+      }
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
+      .breadcrumb .sep {
+        color: var(--dos-gray-300);
+      }
+
+      /* ── LAYOUT ── */
+      .main-content {
+        padding: 32px 0 64px;
+      }
+      .tool-layout {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 28px;
+        align-items: start;
+      }
+
+      /* ── FORM PANEL ── */
+      .form-panel {
+        background: var(--dos-white);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        position: sticky;
+        top: 88px;
+      }
+      .form-panel-header {
+        background: var(--dos-blue);
+        color: var(--dos-white);
+        padding: 14px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .form-panel-header h2 {
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.1px;
+      }
+      .form-body {
+        padding: 20px;
+      }
+      .form-group {
+        margin-bottom: 16px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dos-gray-700);
+        margin-bottom: 6px;
+      }
+      .req {
+        color: var(--dos-red);
+      }
+      .hint {
+        font-size: 12px;
+        color: var(--dos-gray-500);
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+      .form-control {
+        width: 100%;
+        padding: 9px 12px;
+        font-size: 14px;
+        font-family: inherit;
+        color: var(--dos-gray-900);
+        background: var(--dos-white);
+        border: 1px solid var(--dos-gray-300);
+        border-radius: var(--radius);
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: var(--dos-blue-light);
+        box-shadow: 0 0 0 3px rgba(0, 88, 168, 0.12);
+      }
+      select.form-control {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 32px;
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .form-row .form-group {
+        margin-bottom: 0;
+      }
+      .form-divider {
+        border: none;
+        border-top: 1px solid var(--dos-gray-200);
+        margin: 16px 0;
+      }
+      .btn-primary {
+        width: 100%;
+        padding: 11px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        color: var(--dos-white);
+        background: var(--dos-blue);
+        border: none;
+        border-radius: var(--radius);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition:
+          background 0.15s,
+          transform 0.05s;
+      }
+      .btn-primary:hover {
+        background: var(--dos-blue-light);
+      }
+      .btn-primary:active {
+        transform: translateY(1px);
+      }
+      .btn-secondary {
+        width: 100%;
+        margin-top: 8px;
+        padding: 9px 16px;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: inherit;
+        color: var(--dos-gray-700);
+        background: var(--dos-white);
+        border: 1px solid var(--dos-gray-300);
+        border-radius: var(--radius);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .btn-secondary:hover {
+        background: var(--dos-gray-100);
+      }
+
+      /* ── RESULTS PANEL ── */
+      .results-panel {
+        background: var(--dos-white);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+      }
+      .results-header {
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--dos-gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .results-header h2 {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--dos-gray-900);
+      }
+      .results-count {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dos-blue);
+        background: var(--dos-blue-pale);
+        padding: 4px 10px;
+        border-radius: 20px;
+      }
+      .results-body {
+        padding: 20px;
+        min-height: 500px;
+      }
+
+      /* Empty / Loading */
+      .empty-state,
+      .loading-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 60px 20px;
+      }
+      .empty-state .icon-circle {
+        width: 64px;
+        height: 64px;
+        background: var(--dos-blue-pale);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+      }
+      .empty-state h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--dos-gray-900);
+        margin-bottom: 6px;
+      }
+      .empty-state p {
+        font-size: 14px;
+        color: var(--dos-gray-500);
+        max-width: 400px;
+      }
+      .loading-state {
+        display: none;
+      }
+      .loading-state.active {
+        display: flex;
+      }
+      .spinner {
+        width: 36px;
+        height: 36px;
+        border: 3px solid var(--dos-gray-200);
+        border-top-color: var(--dos-blue);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-bottom: 14px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── KPI CARDS ── */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .kpi-card {
+        background: var(--dos-white);
+        border: 1px solid var(--dos-gray-200);
+        border-left: 3px solid var(--dos-blue);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        position: relative;
+      }
+      .kpi-card.red {
+        border-left-color: var(--dos-red);
+      }
+      .kpi-card.success {
+        border-left-color: var(--dos-success);
+      }
+      .kpi-card.warning {
+        border-left-color: var(--dos-warning);
+      }
+      .kpi-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--dos-gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .kpi-value {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--dos-gray-900);
+        line-height: 1.1;
+        margin-bottom: 2px;
+      }
+      .kpi-sub {
+        font-size: 11px;
+        color: var(--dos-gray-500);
+      }
+      .info-tip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--dos-gray-300);
+        color: var(--dos-white);
+        font-size: 10px;
+        font-weight: 700;
+        cursor: help;
+        position: relative;
+        font-style: italic;
+        font-family: Georgia, serif;
+      }
+      .info-tip:hover {
+        background: var(--dos-blue);
+      }
+      .info-tip .tip-body {
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 220px;
+        background: var(--dos-gray-900);
+        color: var(--dos-white);
+        font-size: 11px;
+        font-weight: 400;
+        font-style: normal;
+        font-family: "Source Sans 3", sans-serif;
+        text-align: left;
+        padding: 8px 10px;
+        border-radius: 4px;
+        line-height: 1.4;
+        z-index: 20;
+        pointer-events: none;
+        transition: opacity 0.15s;
+      }
+      .info-tip:hover .tip-body {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      /* ── CHART CARDS ── */
+      .chart-card {
+        background: var(--dos-white);
+        border: 1px solid var(--dos-gray-200);
+        border-radius: var(--radius);
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+      .chart-card-header {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--dos-gray-200);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .chart-card-header h3 {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--dos-gray-900);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .chart-card-header .sub {
+        font-size: 12px;
+        color: var(--dos-gray-500);
+        font-weight: 400;
+      }
+      .chart-card-body {
+        padding: 18px;
+      }
+
+      .chart-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: start;
+      }
+      .chart-container {
+        position: relative;
+        height: 320px;
+      }
+
+      /* Legend / market list on the right of the pie */
+      .market-list {
+        max-height: 320px;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+      .market-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .market-list::-webkit-scrollbar-track {
+        background: var(--dos-gray-100);
+      }
+      .market-list::-webkit-scrollbar-thumb {
+        background: var(--dos-gray-300);
+        border-radius: 3px;
+      }
+
+      .market-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 10px;
+        align-items: center;
+        padding: 9px 10px;
+        border-bottom: 1px solid var(--dos-gray-200);
+        cursor: pointer;
+        transition: background 0.12s;
+        border-left: 3px solid transparent;
+      }
+      .market-item:hover {
+        background: var(--dos-gray-100);
+      }
+      .market-item.active {
+        background: var(--dos-blue-pale);
+        border-left-color: var(--dos-blue);
+      }
+      .market-rank {
+        width: 22px;
+        height: 22px;
+        background: var(--dos-gray-200);
+        color: var(--dos-gray-700);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .market-item.active .market-rank {
+        background: var(--dos-blue);
+        color: var(--dos-white);
+      }
+      .market-info {
+        min-width: 0;
+      }
+      .market-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--dos-gray-900);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .market-flag {
+        display: inline-block;
+        width: 18px;
+        font-size: 14px;
+        line-height: 1;
+      }
+      .market-meta {
+        font-size: 11px;
+        color: var(--dos-gray-500);
+        margin-top: 1px;
+      }
+      .market-share {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--dos-blue);
+        text-align: right;
+      }
+      .market-value {
+        font-size: 10px;
+        color: var(--dos-gray-500);
+        font-weight: 400;
+      }
+      .fta-tag {
+        display: inline-block;
+        font-size: 9px;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 3px;
+        background: var(--dos-success-pale);
+        color: var(--dos-success);
+        letter-spacing: 0.3px;
+      }
+
+      /* Trend card */
+      .trend-prompt {
+        padding: 40px 20px;
+        text-align: center;
+        color: var(--dos-gray-500);
+        font-size: 13px;
+        background: var(--dos-gray-100);
+        border-radius: var(--radius);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      }
+      .trend-prompt svg {
+        opacity: 0.5;
+      }
+
+      .trend-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .trend-stat {
+        background: var(--dos-gray-100);
+        padding: 10px 12px;
+        border-radius: var(--radius);
+      }
+      .trend-stat-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--dos-gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      .trend-stat-value {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--dos-gray-900);
+        margin-top: 2px;
+      }
+      .trend-stat-value.up {
+        color: var(--dos-success);
+      }
+      .trend-stat-value.down {
+        color: var(--dos-red);
+      }
+
+      /* HHI bar */
+      .hhi-bar-wrap {
+        margin-top: 14px;
+        padding: 12px 14px;
+        background: var(--dos-gray-100);
+        border-radius: var(--radius);
+      }
+      .hhi-bar-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dos-gray-700);
+        margin-bottom: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .hhi-bar-track {
+        position: relative;
+        height: 10px;
+        background: linear-gradient(
+          90deg,
+          var(--dos-success) 0%,
+          var(--dos-success) 30%,
+          var(--dos-warning) 30%,
+          var(--dos-warning) 60%,
+          var(--dos-red) 60%,
+          var(--dos-red) 100%
+        );
+        border-radius: 5px;
+      }
+      .hhi-marker {
+        position: absolute;
+        top: -3px;
+        width: 4px;
+        height: 16px;
+        background: var(--dos-gray-900);
+        border-radius: 2px;
+        transform: translateX(-50%);
+        transition: left 0.4s ease;
+      }
+      .hhi-bar-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 10px;
+        color: var(--dos-gray-500);
+        margin-top: 6px;
+      }
+      .concentration-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .concentration-badge.low {
+        background: var(--dos-success-pale);
+        color: var(--dos-success);
+      }
+      .concentration-badge.med {
+        background: var(--dos-warning-pale);
+        color: var(--dos-warning);
+      }
+      .concentration-badge.high {
+        background: #fde7ea;
+        color: var(--dos-red);
+      }
+
+      /* Region toggle */
+      .region-filter {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .region-filter button {
+        background: var(--dos-white);
+        border: 1px solid var(--dos-gray-300);
+        padding: 4px 10px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--dos-gray-700);
+        border-radius: 12px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .region-filter button.active {
+        background: var(--dos-blue);
+        color: var(--dos-white);
+        border-color: var(--dos-blue);
+      }
+      .region-filter button:hover:not(.active) {
+        background: var(--dos-gray-100);
+      }
+
+      /* Chart summary line */
+      .chart-summary {
+        font-size: 12px;
+        color: var(--dos-gray-500);
+        padding: 10px 18px;
+        background: var(--dos-gray-100);
+        border-top: 1px solid var(--dos-gray-200);
+      }
+
+      /* ── MEDIA QUERIES ── */
+      @media (max-width: 960px) {
+        .tool-layout {
+          grid-template-columns: 1fr;
+        }
+        .form-panel {
+          position: static;
+        }
+        .header-nav {
+          display: none;
+        }
+        .hero h1 {
+          font-size: 24px;
+        }
+        .hero p {
+          font-size: 14px;
+        }
+        .kpi-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .chart-layout {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .trend-stats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .chart-container {
+          height: 280px;
+        }
+        .market-list {
+          max-height: 340px;
+        }
+      }
+      @media (max-width: 560px) {
+        .hero {
+          padding: 36px 0 40px;
+        }
+        .hero h1 {
+          font-size: 20px;
+        }
+        .kpi-value {
+          font-size: 18px;
+        }
+        .kpi-card {
+          padding: 12px;
+        }
+        .container {
+          padding: 0 16px;
+        }
+        .results-body {
+          padding: 14px;
+        }
+        .form-body {
+          padding: 16px;
+        }
+        .chart-card-body {
+          padding: 14px;
+        }
+        .chart-container {
+          height: 240px;
+        }
+        .results-header {
+          padding: 12px 14px;
+          flex-wrap: wrap;
+          gap: 6px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- SG Masthead -->
+    <div class="sg-masthead">
+      <div class="container">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 32 32"
+          style="flex-shrink: 0; fill: #ef3320"
+        >
+          <path
+            d="M5.896 11.185c0 0-0.949 1.341 0.294 3.075 0 0 0.196-0.883 2.159-0.883h2.356c2.225 0 3.893-2.126 2.846-4.319 0 0 1.57 0.164 2.095-0.818 0.523-0.981-0.033-1.374-0.818-1.374h-3.959c0 0.704-1.341 0.802-1.341 0h-2.225c0 0-1.669 0-1.701 1.407 0 0 0.377-0.229 0.752-0.261v0.375c0 0-0.458 0.082-0.671 0.197-0.212 0.114-0.523 0.425-0.228 1.227 0.294 0.801 0.409 1.079 0.409 1.079s0.475-0.41 1.244-0.41h0.9c1.602 0 1.308 1.554-0.295 1.554s-1.815-0.85-1.815-0.85z"
+          />
+        </svg>
+        <span>A Singapore Government Agency Website</span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-header">
+      <div class="container">
+        <a href="#" class="logo-group">
+          <img
+            src="https://assets.app.optical.gov.sg/singstat/production/published/assets/e86882cd-793f-4570-99cc-bb48b9e7542e.png"
+            alt="Department of Statistics Singapore"
+            style="height: 42px; width: auto"
+          />
+        </a>
+        <nav class="header-nav">
+          <a href="#">Find Data</a>
+          <a href="#" class="active">Data Tools & Services</a>
+          <a href="#">News</a>
+          <a href="#">Publications</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <h1>Where Do Firms Like Mine Export?</h1>
+        <p>
+          Explore the export destinations and market concentration of Singapore
+          firms matching your business profile. Identify where similar firms
+          sell abroad, see historical trends, and benchmark against the industry
+          landscape.
+        </p>
+      </div>
+    </section>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-bar">
+      <div class="container">
+        <nav class="breadcrumb">
+          <a href="#">Home</a>
+          <span class="sep">/</span>
+          <a href="#">Data Tools</a>
+          <span class="sep">/</span>
+          <span>Export Landscape Explorer</span>
+        </nav>
+      </div>
+    </div>
+
+    <main class="main-content">
+      <div class="container">
+        <div class="tool-layout">
+          <!-- LEFT: Input Form -->
+          <div class="form-panel">
+            <div class="form-panel-header">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M4 5h12M4 10h8M4 15h10"
+                  stroke="#fff"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <h2>Business Characteristics</h2>
+            </div>
+            <div class="form-body">
+              <div class="form-group">
+                <label>SSIC2025 (2-Digit) <span class="req">*</span></label>
+                <div class="hint">
+                  Select the SSIC division that best represents your sector.
+                </div>
+                <select class="form-control" id="ssic2d">
+                  <option value="">Select SSIC division…</option>
+                  <option value="01">
+                    01 – Agriculture & Related Services
+                  </option>
+                  <option value="10">10 – Manufacture of Food Products</option>
+                  <option value="13">13 – Manufacture of Textiles</option>
+                  <option value="20">20 – Manufacture of Chemicals</option>
+                  <option value="21">
+                    21 – Manufacture of Pharmaceuticals
+                  </option>
+                  <option value="22">
+                    22 – Manufacture of Rubber & Plastics
+                  </option>
+                  <option value="26">26 – Electronic & Optical Products</option>
+                  <option value="27">
+                    27 – Manufacture of Electrical Equipment
+                  </option>
+                  <option value="28">
+                    28 – Manufacture of Machinery & Equipment
+                  </option>
+                  <option value="30">30 – Other Transport Equipment</option>
+                  <option value="32">32 – Other Manufacturing</option>
+                  <option value="46">46 – Wholesale Trade</option>
+                  <option value="47">47 – Retail Trade</option>
+                  <option value="49">49 – Land Transport</option>
+                  <option value="50">50 – Water Transport</option>
+                  <option value="52">52 – Warehousing & Support</option>
+                  <option value="58">58 – Publishing Activities</option>
+                  <option value="62">62 – IT & Software Services</option>
+                  <option value="63">
+                    63 – Information Service Activities
+                  </option>
+                  <option value="71">71 – Architectural & Engineering</option>
+                  <option value="72">72 – Scientific R&D</option>
+                  <option value="73">73 – Advertising & Market Research</option>
+                  <option value="74">
+                    74 – Other Professional & Technical
+                  </option>
+                </select>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Revenue Band <span class="req">*</span></label>
+                  <select class="form-control" id="revenueBand">
+                    <option value="">Select…</option>
+                    <option value="micro">Below $1M</option>
+                    <option value="small">$1M – $10M</option>
+                    <option value="medium">$10M – $100M</option>
+                    <option value="large">$100M – $500M</option>
+                    <option value="enterprise">Above $500M</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Employment Size <span class="req">*</span></label>
+                  <select class="form-control" id="employmentSize">
+                    <option value="">Select…</option>
+                    <option value="1-9">1 – 9</option>
+                    <option value="10-49">10 – 49</option>
+                    <option value="50-199">50 – 199</option>
+                    <option value="200-499">200 – 499</option>
+                    <option value="500+">500+</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Firm Age <span class="req">*</span></label>
+                <select class="form-control" id="firmAge">
+                  <option value="">Select range…</option>
+                  <option value="0-2">Less than 2 years</option>
+                  <option value="2-5">2 – 5 years</option>
+                  <option value="5-10">5 – 10 years</option>
+                  <option value="10-20">10 – 20 years</option>
+                  <option value="20+">More than 20 years</option>
+                </select>
+              </div>
+
+              <button
+                class="btn-primary"
+                id="submitBtn"
+                onclick="handleSubmit()"
+              >
+                <span>Explore Landscape</span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M3 8h10M9 4l4 4-4 4"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <button class="btn-secondary" onclick="resetForm()">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+                  <path
+                    d="M2 8a6 6 0 1011.5-2.3M13.5 2v3.7H9.8"
+                    stroke="currentColor"
+                    stroke-width="1.3"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                Clear Form
+              </button>
+
+              <div
+                style="
+                  margin-top: 18px;
+                  padding: 12px;
+                  background: var(--dos-blue-pale);
+                  border-radius: 4px;
+                  font-size: 11px;
+                  color: var(--dos-gray-700);
+                  line-height: 1.5;
+                "
+              >
+                <strong style="color: var(--dos-blue)">Data source:</strong>
+                Exports data aggregated from Singapore Customs export
+                declarations (2015 – 2024), matched to ACRA firm registry.
+                Small-cell values are suppressed to protect confidentiality.
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Results -->
+          <div>
+            <div class="results-panel">
+              <div class="results-header">
+                <h2>Export Landscape</h2>
+                <span class="results-count" id="resultsCount"
+                  >Awaiting selection</span
+                >
+              </div>
+              <div class="results-body">
+                <!-- Empty state -->
+                <div class="empty-state" id="emptyState">
+                  <div class="icon-circle">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <circle
+                        cx="16"
+                        cy="16"
+                        r="11"
+                        stroke="#0058A8"
+                        stroke-width="1.5"
+                      />
+                      <path
+                        d="M3 16h26M16 5c3 3 3 19 0 22M16 5c-3 3-3 19 0 22"
+                        stroke="#0058A8"
+                        stroke-width="1.4"
+                      />
+                    </svg>
+                  </div>
+                  <h3>Select a business profile</h3>
+                  <p>
+                    Choose an SSIC division, revenue band, employment size and
+                    firm age, then click <strong>Explore Landscape</strong> to
+                    see where similar firms export.
+                  </p>
+                </div>
+
+                <!-- Loading -->
+                <div class="loading-state" id="loadingState">
+                  <div class="spinner"></div>
+                  <p>Aggregating export data for matching firms…</p>
+                </div>
+
+                <!-- Results (hidden until submit) -->
+                <div id="resultsContent" style="display: none">
+                  <!-- KPI cards -->
+                  <div class="kpi-grid">
+                    <div class="kpi-card">
+                      <div class="kpi-label">Matching Firms</div>
+                      <div class="kpi-value" id="kpiFirms">–</div>
+                      <div class="kpi-sub" id="kpiFirmsSub">
+                        of which export
+                      </div>
+                    </div>
+                    <div class="kpi-card red">
+                      <div class="kpi-label">Total Exports (2024)</div>
+                      <div class="kpi-value" id="kpiExports">–</div>
+                      <div class="kpi-sub" id="kpiExportsSub">SGD</div>
+                    </div>
+                    <div class="kpi-card success">
+                      <div class="kpi-label">Export Markets</div>
+                      <div class="kpi-value" id="kpiMarkets">–</div>
+                      <div class="kpi-sub">destinations reached</div>
+                    </div>
+                    <div class="kpi-card warning">
+                      <div class="kpi-label">
+                        HHI
+                        <span class="info-tip"
+                          >i
+                          <span class="tip-body">
+                            <strong>Herfindahl-Hirschman Index</strong> measures
+                            market concentration. Sum of squared share of each
+                            destination. &lt;1,500 = low concentration, 1,500 –
+                            2,500 = moderate, &gt;2,500 = high.
+                          </span>
+                        </span>
+                      </div>
+                      <div class="kpi-value" id="kpiHHI">–</div>
+                      <div class="kpi-sub" id="kpiHHISub">concentration</div>
+                    </div>
+                  </div>
+
+                  <!-- HHI concentration bar -->
+                  <div class="hhi-bar-wrap">
+                    <div class="hhi-bar-title">
+                      <span>Export Destination Concentration</span>
+                      <span class="concentration-badge" id="concBadge">–</span>
+                    </div>
+                    <div class="hhi-bar-track">
+                      <div
+                        class="hhi-marker"
+                        id="hhiMarker"
+                        style="left: 0%"
+                      ></div>
+                    </div>
+                    <div class="hhi-bar-labels">
+                      <span>Diversified (0)</span>
+                      <span>Moderate (1,500)</span>
+                      <span>Concentrated (2,500)</span>
+                      <span>Monopoly (10,000)</span>
+                    </div>
+                  </div>
+
+                  <!-- Pie chart + market list -->
+                  <div class="chart-card" style="margin-top: 16px">
+                    <div class="chart-card-header">
+                      <h3>
+                        Top Export Destinations
+                        <span class="sub">(click to view trend)</span>
+                      </h3>
+                      <div class="region-filter" id="regionFilter">
+                        <button class="active" data-region="all">All</button>
+                        <button data-region="asean">ASEAN</button>
+                        <button data-region="asia-pacific">Asia-Pacific</button>
+                        <button data-region="americas">Americas</button>
+                        <button data-region="europe">Europe</button>
+                        <button data-region="others">Others</button>
+                      </div>
+                    </div>
+                    <div class="chart-card-body">
+                      <div class="chart-layout">
+                        <div class="chart-container">
+                          <canvas id="pieChart"></canvas>
+                        </div>
+                        <div class="market-list" id="marketList"></div>
+                      </div>
+                    </div>
+                    <div class="chart-summary" id="pieSummary"></div>
+                  </div>
+
+                  <!-- Line chart: 10-year trend -->
+                  <div class="chart-card">
+                    <div class="chart-card-header">
+                      <h3 id="trendTitle">Export Trend (2015 – 2024)</h3>
+                      <span class="sub" id="trendSub"
+                        >Select a destination above to view trend</span
+                      >
+                    </div>
+                    <div class="chart-card-body">
+                      <div id="trendEmpty" class="trend-prompt">
+                        <svg
+                          width="36"
+                          height="36"
+                          viewBox="0 0 32 32"
+                          fill="none"
+                        >
+                          <path
+                            d="M3 24l7-9 6 4 6-10 7 7"
+                            stroke="#0058A8"
+                            stroke-width="1.6"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M3 28h26"
+                            stroke="#0058A8"
+                            stroke-width="1.4"
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                        <div>
+                          Click on a destination in the pie chart or the list on
+                          the right to see its 10-year export trend.
+                        </div>
+                      </div>
+                      <div id="trendContent" style="display: none">
+                        <div class="trend-stats">
+                          <div class="trend-stat">
+                            <div class="trend-stat-label">2024 Exports</div>
+                            <div class="trend-stat-value" id="trendLatest">
+                              –
+                            </div>
+                          </div>
+                          <div class="trend-stat">
+                            <div class="trend-stat-label">10-yr CAGR</div>
+                            <div class="trend-stat-value" id="trendCAGR">–</div>
+                          </div>
+                          <div class="trend-stat">
+                            <div class="trend-stat-label">Peak Year</div>
+                            <div class="trend-stat-value" id="trendPeak">–</div>
+                          </div>
+                          <div class="trend-stat">
+                            <div class="trend-stat-label">FTA Status</div>
+                            <div class="trend-stat-value" id="trendFTA">–</div>
+                          </div>
+                        </div>
+                        <div class="chart-container" style="height: 300px">
+                          <canvas id="trendChart"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      // ═══════════════════════════════════════════
+      // COUNTRY DATA
+      // ═══════════════════════════════════════════
+      const COUNTRIES = [
+        {
+          code: "CN",
+          name: "China",
+          flag: "🇨🇳",
+          region: "asia-pacific",
+          fta: "CSFTA",
+        },
+        {
+          code: "US",
+          name: "United States",
+          flag: "🇺🇸",
+          region: "americas",
+          fta: "USSFTA",
+        },
+        {
+          code: "MY",
+          name: "Malaysia",
+          flag: "🇲🇾",
+          region: "asean",
+          fta: "ATIGA",
+        },
+        {
+          code: "ID",
+          name: "Indonesia",
+          flag: "🇮🇩",
+          region: "asean",
+          fta: "ATIGA",
+        },
+        {
+          code: "HK",
+          name: "Hong Kong",
+          flag: "🇭🇰",
+          region: "asia-pacific",
+          fta: null,
+        },
+        {
+          code: "JP",
+          name: "Japan",
+          flag: "🇯🇵",
+          region: "asia-pacific",
+          fta: "JSEPA",
+        },
+        {
+          code: "KR",
+          name: "South Korea",
+          flag: "🇰🇷",
+          region: "asia-pacific",
+          fta: "KSFTA",
+        },
+        {
+          code: "TW",
+          name: "Taiwan",
+          flag: "🇹🇼",
+          region: "asia-pacific",
+          fta: null,
+        },
+        {
+          code: "TH",
+          name: "Thailand",
+          flag: "🇹🇭",
+          region: "asean",
+          fta: "ATIGA",
+        },
+        {
+          code: "VN",
+          name: "Vietnam",
+          flag: "🇻🇳",
+          region: "asean",
+          fta: "ATIGA",
+        },
+        {
+          code: "PH",
+          name: "Philippines",
+          flag: "🇵🇭",
+          region: "asean",
+          fta: "ATIGA",
+        },
+        {
+          code: "IN",
+          name: "India",
+          flag: "🇮🇳",
+          region: "asia-pacific",
+          fta: "CECA",
+        },
+        {
+          code: "AU",
+          name: "Australia",
+          flag: "🇦🇺",
+          region: "asia-pacific",
+          fta: "SAFTA",
+        },
+        {
+          code: "DE",
+          name: "Germany",
+          flag: "🇩🇪",
+          region: "europe",
+          fta: "EUSFTA",
+        },
+        {
+          code: "NL",
+          name: "Netherlands",
+          flag: "🇳🇱",
+          region: "europe",
+          fta: "EUSFTA",
+        },
+        {
+          code: "GB",
+          name: "United Kingdom",
+          flag: "🇬🇧",
+          region: "europe",
+          fta: "UKSFTA",
+        },
+        {
+          code: "FR",
+          name: "France",
+          flag: "🇫🇷",
+          region: "europe",
+          fta: "EUSFTA",
+        },
+        { code: "AE", name: "UAE", flag: "🇦🇪", region: "others", fta: "GSFTA" },
+        {
+          code: "MX",
+          name: "Mexico",
+          flag: "🇲🇽",
+          region: "americas",
+          fta: "CPTPP",
+        },
+        {
+          code: "BR",
+          name: "Brazil",
+          flag: "🇧🇷",
+          region: "americas",
+          fta: null,
+        },
+      ];
+
+      // ═══════════════════════════════════════════
+      // SSIC BASE PROFILES
+      // Each profile biases which destinations dominate the pie
+      // ═══════════════════════════════════════════
+      const SSIC_PROFILES = {
+        // Electronics
+        26: {
+          base: {
+            CN: 28,
+            US: 15,
+            MY: 10,
+            HK: 12,
+            TW: 7,
+            JP: 6,
+            KR: 5,
+            VN: 4,
+            DE: 3,
+            IN: 3,
+            TH: 2,
+            PH: 2,
+            NL: 2,
+            GB: 1,
+          },
+          totalM: 142000,
+        },
+        // Chemicals
+        20: {
+          base: {
+            CN: 22,
+            MY: 11,
+            IN: 9,
+            JP: 7,
+            KR: 6,
+            US: 6,
+            ID: 6,
+            VN: 5,
+            TH: 4,
+            AU: 3,
+            DE: 3,
+            NL: 3,
+            PH: 2,
+          },
+          totalM: 38000,
+        },
+        // Pharma
+        21: {
+          base: {
+            US: 24,
+            CN: 14,
+            JP: 10,
+            DE: 7,
+            NL: 6,
+            GB: 5,
+            AU: 5,
+            KR: 4,
+            FR: 4,
+            MY: 3,
+            TH: 3,
+            IN: 3,
+          },
+          totalM: 12000,
+        },
+        // Plastics
+        22: {
+          base: {
+            MY: 16,
+            ID: 12,
+            CN: 10,
+            US: 8,
+            VN: 8,
+            TH: 7,
+            PH: 6,
+            IN: 5,
+            JP: 4,
+            AU: 4,
+            KR: 3,
+          },
+          totalM: 6500,
+        },
+        // Machinery
+        28: {
+          base: {
+            CN: 18,
+            US: 14,
+            MY: 10,
+            ID: 8,
+            JP: 7,
+            IN: 6,
+            VN: 6,
+            TH: 5,
+            DE: 5,
+            KR: 4,
+            AU: 3,
+          },
+          totalM: 18000,
+        },
+        // Electrical equip
+        27: {
+          base: {
+            CN: 20,
+            US: 12,
+            MY: 11,
+            ID: 8,
+            VN: 7,
+            IN: 6,
+            JP: 6,
+            TH: 5,
+            KR: 4,
+            AU: 3,
+          },
+          totalM: 9200,
+        },
+        // Food
+        10: {
+          base: {
+            MY: 22,
+            ID: 14,
+            CN: 10,
+            HK: 9,
+            JP: 7,
+            PH: 6,
+            TH: 5,
+            VN: 5,
+            AU: 4,
+            US: 3,
+          },
+          totalM: 4800,
+        },
+        // Transport equipment
+        30: {
+          base: {
+            US: 18,
+            CN: 14,
+            DE: 10,
+            JP: 8,
+            AU: 7,
+            GB: 6,
+            FR: 5,
+            KR: 5,
+            AE: 4,
+            NL: 3,
+          },
+          totalM: 22000,
+        },
+        // Wholesale
+        46: {
+          base: {
+            CN: 16,
+            MY: 12,
+            US: 10,
+            ID: 10,
+            HK: 8,
+            JP: 6,
+            VN: 6,
+            TH: 5,
+            AU: 4,
+            KR: 4,
+            IN: 3,
+          },
+          totalM: 68000,
+        },
+        // IT services
+        62: {
+          base: {
+            US: 22,
+            GB: 12,
+            AU: 10,
+            JP: 8,
+            HK: 7,
+            DE: 6,
+            IN: 6,
+            MY: 5,
+            CN: 5,
+            KR: 4,
+          },
+          totalM: 7800,
+        },
+        // Scientific R&D
+        72: {
+          base: {
+            US: 20,
+            CN: 14,
+            JP: 10,
+            DE: 8,
+            GB: 7,
+            KR: 6,
+            AU: 5,
+            FR: 5,
+            NL: 4,
+            IN: 4,
+          },
+          totalM: 3200,
+        },
+        // Engineering
+        71: {
+          base: {
+            MY: 14,
+            ID: 12,
+            CN: 10,
+            IN: 9,
+            AE: 8,
+            VN: 7,
+            TH: 6,
+            AU: 5,
+            PH: 5,
+            US: 4,
+          },
+          totalM: 5400,
+        },
+        // Water transport
+        50: {
+          base: {
+            CN: 14,
+            MY: 10,
+            US: 9,
+            ID: 8,
+            HK: 7,
+            JP: 6,
+            KR: 6,
+            AE: 5,
+            NL: 5,
+            AU: 4,
+            IN: 4,
+          },
+          totalM: 28000,
+        },
+        // Warehousing
+        52: {
+          base: {
+            MY: 15,
+            CN: 12,
+            US: 10,
+            ID: 9,
+            HK: 8,
+            JP: 6,
+            VN: 5,
+            TH: 5,
+            AU: 4,
+            KR: 4,
+          },
+          totalM: 12500,
+        },
+        // Textiles
+        13: {
+          base: {
+            US: 20,
+            JP: 12,
+            MY: 10,
+            CN: 8,
+            HK: 7,
+            GB: 6,
+            DE: 5,
+            AU: 5,
+            KR: 4,
+            VN: 4,
+          },
+          totalM: 1800,
+        },
+        // Other manufacturing
+        32: {
+          base: {
+            US: 16,
+            CN: 13,
+            MY: 10,
+            JP: 8,
+            DE: 6,
+            ID: 6,
+            GB: 5,
+            AU: 5,
+            KR: 4,
+            TH: 4,
+          },
+          totalM: 4200,
+        },
+        // Default profile for any other SSIC
+        default: {
+          base: {
+            CN: 17,
+            MY: 12,
+            US: 11,
+            ID: 8,
+            HK: 7,
+            JP: 6,
+            VN: 5,
+            TH: 5,
+            KR: 4,
+            IN: 4,
+            AU: 3,
+            DE: 3,
+          },
+          totalM: 8000,
+        },
+      };
+
+      // Revenue multipliers (scales total exports & firm count)
+      const REVENUE_MULT = {
+        micro: { exp: 0.08, firms: 1.8, exporters: 0.22 },
+        small: { exp: 0.25, firms: 1.0, exporters: 0.48 },
+        medium: { exp: 1.0, firms: 0.45, exporters: 0.72 },
+        large: { exp: 3.4, firms: 0.1, exporters: 0.88 },
+        enterprise: { exp: 9.5, firms: 0.025, exporters: 0.94 },
+      };
+
+      const EMPLOYMENT_MULT = {
+        "1-9": 0.85,
+        "10-49": 1.0,
+        "50-199": 1.15,
+        "200-499": 1.3,
+        "500+": 1.45,
+      };
+
+      const AGE_MULT = {
+        "0-2": { exp: 0.35, diversity: 0.7 }, // younger firms less diversified
+        "2-5": { exp: 0.7, diversity: 0.85 },
+        "5-10": { exp: 1.0, diversity: 1.0 },
+        "10-20": { exp: 1.25, diversity: 1.15 },
+        "20+": { exp: 1.5, diversity: 1.3 },
+      };
+
+      const SSIC_FIRM_COUNT = {
+        26: 1200,
+        20: 680,
+        21: 180,
+        22: 450,
+        28: 1150,
+        27: 520,
+        10: 980,
+        30: 240,
+        46: 18500,
+        62: 6400,
+        72: 320,
+        71: 2800,
+        50: 780,
+        52: 1450,
+        13: 210,
+        32: 1680,
+        default: 2200,
+      };
+
+      // ═══════════════════════════════════════════
+      // STATE
+      // ═══════════════════════════════════════════
+      let state = {
+        profile: null,
+        markets: [], // [{code, name, flag, region, fta, share, value2024, trend: [10 years]}]
+        selectedCode: null,
+        regionFilter: "all",
+        pieChart: null,
+        trendChart: null,
+      };
+
+      // Simple seedable PRNG so same inputs = same outputs
+      function makePRNG(seed) {
+        let s = seed >>> 0;
+        return function () {
+          s = (s * 1664525 + 1013904223) >>> 0;
+          return s / 4294967296;
+        };
+      }
+
+      function hashInput(ssic, rev, size, age) {
+        let h = 2166136261;
+        const s = ssic + "|" + rev + "|" + size + "|" + age;
+        for (let i = 0; i < s.length; i++) {
+          h ^= s.charCodeAt(i);
+          h = Math.imul(h, 16777619);
+        }
+        return h >>> 0;
+      }
+
+      // ═══════════════════════════════════════════
+      // DATA GENERATION
+      // ═══════════════════════════════════════════
+      function buildProfile(ssic, revenue, empSize, age) {
+        const rand = makePRNG(hashInput(ssic, revenue, empSize, age));
+
+        const ssicProf = SSIC_PROFILES[ssic] || SSIC_PROFILES["default"];
+        const rMult = REVENUE_MULT[revenue];
+        const eMult = EMPLOYMENT_MULT[empSize];
+        const aMult = AGE_MULT[age];
+
+        // Build market shares — start from ssic base, perturb, scale by diversity
+        const base = { ...ssicProf.base };
+        let shares = {};
+        let totalShare = 0;
+        for (const code in base) {
+          // perturbation ±20%
+          const noise = 1 + (rand() - 0.5) * 0.4;
+          // diversity factor — higher diversity spreads share more; lower concentrates on top markets
+          // We tweak by flattening or sharpening the distribution
+          let v = base[code] * noise;
+          shares[code] = v;
+          totalShare += v;
+        }
+
+        // Diversity shaping: if diversity < 1, sharpen (top get bigger); if > 1, flatten
+        const diversity = aMult.diversity;
+        const sharpened = {};
+        for (const code in shares) {
+          // Raise to power 1/diversity. <1 sharpens, >1 flattens
+          sharpened[code] = Math.pow(
+            shares[code],
+            1 / Math.max(0.6, Math.min(1.6, diversity)),
+          );
+        }
+        // Renormalize
+        let sumS = 0;
+        for (const c in sharpened) sumS += sharpened[c];
+        const sharePct = {};
+        for (const c in sharpened) sharePct[c] = (sharpened[c] / sumS) * 100;
+
+        // Total export value
+        const totalExportsM =
+          ssicProf.totalM *
+          rMult.exp *
+          eMult *
+          aMult.exp *
+          (0.85 + rand() * 0.3); // ±15% noise
+
+        // Firm counts
+        const ssicFirms = SSIC_FIRM_COUNT[ssic] || SSIC_FIRM_COUNT["default"];
+        const totalMatching = Math.max(
+          3,
+          Math.round(ssicFirms * rMult.firms * (0.85 + rand() * 0.3)),
+        );
+        const exporterShare = rMult.exporters * aMult.diversity * 0.95;
+        const exporterCount = Math.max(
+          1,
+          Math.round(totalMatching * Math.min(0.98, exporterShare)),
+        );
+
+        // Market objects
+        const markets = COUNTRIES.filter((c) => sharePct[c.code] != null)
+          .map((c) => {
+            const pct = sharePct[c.code];
+            const value2024 = (totalExportsM * pct) / 100; // in $M
+            // 10-year trend — growth biased by region + randomness
+            const trend = generateTrend(value2024, c.region, rand);
+            return {
+              ...c,
+              share: pct,
+              value2024,
+              trend,
+            };
+          })
+          .sort((a, b) => b.share - a.share);
+
+        // HHI (sum of squared percentage shares — scale 0 - 10,000)
+        let hhi = 0;
+        for (const m of markets) hhi += m.share * m.share;
+
+        return {
+          ssic,
+          revenue,
+          empSize,
+          age,
+          totalExportsM,
+          totalMatching,
+          exporterCount,
+          markets,
+          hhi: Math.round(hhi),
+        };
+      }
+
+      function generateTrend(value2024, region, rand) {
+        // Baseline annual growth by region
+        const baseGrowth =
+          {
+            asean: 0.055,
+            "asia-pacific": 0.042,
+            americas: 0.028,
+            europe: 0.018,
+            others: 0.032,
+          }[region] || 0.03;
+
+        // Walk backwards from 2024 to 2015
+        const trend = new Array(10);
+        trend[9] = value2024;
+        for (let i = 8; i >= 0; i--) {
+          const yearGrowth = baseGrowth + (rand() - 0.5) * 0.18; // noisy
+          trend[i] = trend[i + 1] / (1 + yearGrowth);
+        }
+        // COVID-19 dip in 2020 (index 5)
+        trend[5] *= 0.82 + rand() * 0.08;
+        // Rebound in 2021 (index 6)
+        trend[6] *= 1.04 + rand() * 0.06;
+        return trend.map((v) => Math.max(0.01, v));
+      }
+
+      // ═══════════════════════════════════════════
+      // FORMATTERS
+      // ═══════════════════════════════════════════
+      function formatSGD(valM) {
+        // valM is in $M
+        if (valM >= 1000) return "$" + (valM / 1000).toFixed(1) + "B";
+        if (valM >= 1) return "$" + valM.toFixed(0) + "M";
+        return "$" + (valM * 1000).toFixed(0) + "K";
+      }
+      function formatNum(n) {
+        return n.toLocaleString();
+      }
+      function concentrationLabel(hhi) {
+        if (hhi < 1500) return { label: "Diversified", cls: "low" };
+        if (hhi < 2500) return { label: "Moderate", cls: "med" };
+        return { label: "Concentrated", cls: "high" };
+      }
+
+      // Chart color palette — DOS-ish
+      const PALETTE = [
+        "#003b71",
+        "#cf152d",
+        "#0058a8",
+        "#0a7c42",
+        "#c67f07",
+        "#5a2d6b",
+        "#00797a",
+        "#b23a48",
+        "#2e6091",
+        "#6b8e23",
+        "#8b4513",
+        "#4a5568",
+        "#7c9885",
+        "#a0522d",
+        "#556b7d",
+        "#8a6d3b",
+        "#1f4e5f",
+        "#843c0c",
+        "#3b6e4a",
+        "#6e3b5a",
+      ];
+
+      // ═══════════════════════════════════════════
+      // SUBMIT
+      // ═══════════════════════════════════════════
+      function handleSubmit() {
+        const ssic = document.getElementById("ssic2d").value;
+        const revenue = document.getElementById("revenueBand").value;
+        const emp = document.getElementById("employmentSize").value;
+        const age = document.getElementById("firmAge").value;
+
+        if (!ssic || !revenue || !emp || !age) {
+          alert(
+            "Please complete all four business characteristics before exploring.",
+          );
+          return;
+        }
+
+        // Show loading
+        document.getElementById("emptyState").style.display = "none";
+        document.getElementById("resultsContent").style.display = "none";
+        const loader = document.getElementById("loadingState");
+        loader.classList.add("active");
+        document.getElementById("resultsCount").textContent = "Processing…";
+
+        // Simulate async
+        setTimeout(() => {
+          const profile = buildProfile(ssic, revenue, emp, age);
+          state.profile = profile;
+          state.markets = profile.markets;
+          state.selectedCode = null;
+          state.regionFilter = "all";
+          document.querySelectorAll("#regionFilter button").forEach((b) => {
+            b.classList.toggle("active", b.dataset.region === "all");
+          });
+
+          loader.classList.remove("active");
+          document.getElementById("resultsContent").style.display = "block";
+          renderKPIs();
+          renderPie();
+          renderMarketList();
+          resetTrendView();
+        }, 550);
+      }
+
+      function resetForm() {
+        document.getElementById("ssic2d").value = "";
+        document.getElementById("revenueBand").value = "";
+        document.getElementById("employmentSize").value = "";
+        document.getElementById("firmAge").value = "";
+        state.profile = null;
+        state.markets = [];
+        state.selectedCode = null;
+        if (state.pieChart) {
+          state.pieChart.destroy();
+          state.pieChart = null;
+        }
+        if (state.trendChart) {
+          state.trendChart.destroy();
+          state.trendChart = null;
+        }
+        document.getElementById("resultsContent").style.display = "none";
+        document.getElementById("emptyState").style.display = "flex";
+        document.getElementById("resultsCount").textContent =
+          "Awaiting selection";
+      }
+
+      // ═══════════════════════════════════════════
+      // RENDER: KPIs + HHI
+      // ═══════════════════════════════════════════
+      function renderKPIs() {
+        const p = state.profile;
+        document.getElementById("kpiFirms").textContent = formatNum(
+          p.totalMatching,
+        );
+        document.getElementById("kpiFirmsSub").textContent =
+          formatNum(p.exporterCount) +
+          " export (" +
+          Math.round((p.exporterCount / p.totalMatching) * 100) +
+          "%)";
+        document.getElementById("kpiExports").textContent = formatSGD(
+          p.totalExportsM,
+        );
+        document.getElementById("kpiExportsSub").textContent =
+          "SGD · 2024 aggregate";
+        document.getElementById("kpiMarkets").textContent = p.markets.length;
+        document.getElementById("kpiHHI").textContent = formatNum(p.hhi);
+        const conc = concentrationLabel(p.hhi);
+        document.getElementById("kpiHHISub").textContent =
+          conc.label.toLowerCase();
+
+        const badge = document.getElementById("concBadge");
+        badge.textContent = conc.label;
+        badge.className = "concentration-badge " + conc.cls;
+
+        // HHI marker position — cap at 10000 = 100%
+        const pctPos = Math.min(100, (p.hhi / 10000) * 100);
+        document.getElementById("hhiMarker").style.left = pctPos + "%";
+
+        document.getElementById("resultsCount").textContent =
+          formatNum(p.totalMatching) +
+          " firms · " +
+          p.markets.length +
+          " markets";
+      }
+
+      // ═══════════════════════════════════════════
+      // RENDER: PIE
+      // ═══════════════════════════════════════════
+      function getFilteredMarkets() {
+        if (state.regionFilter === "all") return state.markets;
+        return state.markets.filter((m) => m.region === state.regionFilter);
+      }
+
+      function renderPie() {
+        const canvas = document.getElementById("pieChart");
+        const filtered = getFilteredMarkets();
+
+        // For pie — show top 8, bundle rest as "Others"
+        const TOP_N = 8;
+        let displayMarkets = filtered.slice(0, TOP_N);
+        const otherMarkets = filtered.slice(TOP_N);
+        let otherShare = 0;
+        for (const m of otherMarkets) otherShare += m.share;
+
+        const labels = displayMarkets.map((m) => m.name);
+        const data = displayMarkets.map((m) => m.share);
+        const codes = displayMarkets.map((m) => m.code);
+        if (otherShare > 0) {
+          labels.push("Others (" + otherMarkets.length + ")");
+          data.push(otherShare);
+          codes.push("__OTHERS__");
+        }
+
+        const colors = labels.map((_, i) => PALETTE[i % PALETTE.length]);
+
+        if (state.pieChart) state.pieChart.destroy();
+
+        state.pieChart = new Chart(canvas.getContext("2d"), {
+          type: "doughnut",
+          data: {
+            labels,
+            datasets: [
+              {
+                data,
+                backgroundColor: colors,
+                borderColor: "#fff",
+                borderWidth: 2,
+                hoverOffset: 8,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "55%",
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: "#1f2937",
+                padding: 10,
+                titleFont: { family: "Source Sans 3", size: 13, weight: "600" },
+                bodyFont: { family: "Source Sans 3", size: 12 },
+                callbacks: {
+                  label: (ctx) => {
+                    const pct = ctx.parsed;
+                    const mkt = displayMarkets[ctx.dataIndex];
+                    if (mkt) {
+                      return [
+                        "Share: " + pct.toFixed(1) + "%",
+                        "Value: " + formatSGD(mkt.value2024),
+                      ];
+                    }
+                    return "Share: " + pct.toFixed(1) + "%";
+                  },
+                },
+              },
+            },
+            onClick: (evt, elements) => {
+              if (elements.length > 0) {
+                const idx = elements[0].index;
+                const code = codes[idx];
+                if (code !== "__OTHERS__") selectMarket(code);
+              }
+            },
+            onHover: (evt, els) => {
+              evt.native.target.style.cursor = els.length
+                ? "pointer"
+                : "default";
+            },
+          },
+        });
+
+        // Pie summary
+        const totalShownShare = displayMarkets.reduce((s, m) => s + m.share, 0);
+        const top3Share = displayMarkets
+          .slice(0, 3)
+          .reduce((s, m) => s + m.share, 0);
+        const summary = document.getElementById("pieSummary");
+        if (filtered.length === 0) {
+          summary.innerHTML = "No destinations match the region filter.";
+        } else {
+          summary.innerHTML =
+            "<strong>" +
+            filtered.length +
+            "</strong> destinations shown. " +
+            "<strong>Top 3</strong> account for " +
+            "<strong>" +
+            top3Share.toFixed(1) +
+            "%</strong> of exports in this filter.";
+        }
+      }
+
+      // ═══════════════════════════════════════════
+      // RENDER: MARKET LIST
+      // ═══════════════════════════════════════════
+      function renderMarketList() {
+        const filtered = getFilteredMarkets();
+        const container = document.getElementById("marketList");
+        if (filtered.length === 0) {
+          container.innerHTML =
+            '<div style="padding:20px;text-align:center;color:var(--dos-gray-500);font-size:13px;">No destinations in this region</div>';
+          return;
+        }
+        container.innerHTML = filtered
+          .map(
+            (m, i) => `
+          <div class="market-item ${state.selectedCode === m.code ? "active" : ""}"
+               onclick="selectMarket('${m.code}')">
+            <div class="market-rank">${i + 1}</div>
+            <div class="market-info">
+              <div class="market-name">
+                <span class="market-flag">${m.flag}</span>${m.name}
+                ${m.fta ? `<span class="fta-tag">${m.fta}</span>` : ""}
+              </div>
+              <div class="market-meta">${formatSGD(m.value2024)} · ${m.region.replace("-", " ")}</div>
+            </div>
+            <div>
+              <div class="market-share">${m.share.toFixed(1)}%</div>
+            </div>
+          </div>
+        `,
+          )
+          .join("");
+      }
+
+      // ═══════════════════════════════════════════
+      // REGION FILTER HANDLERS
+      // ═══════════════════════════════════════════
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll("#regionFilter button").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            document
+              .querySelectorAll("#regionFilter button")
+              .forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            state.regionFilter = btn.dataset.region;
+            // Clear selection if not in filter
+            if (state.selectedCode) {
+              const stillVisible = getFilteredMarkets().some(
+                (m) => m.code === state.selectedCode,
+              );
+              if (!stillVisible) {
+                state.selectedCode = null;
+                resetTrendView();
+              }
+            }
+            renderPie();
+            renderMarketList();
+          });
+        });
+      });
+
+      // ═══════════════════════════════════════════
+      // SELECT MARKET → TREND
+      // ═══════════════════════════════════════════
+      function selectMarket(code) {
+        state.selectedCode = code;
+        renderMarketList();
+        renderTrend();
+      }
+
+      function resetTrendView() {
+        document.getElementById("trendEmpty").style.display = "flex";
+        document.getElementById("trendContent").style.display = "none";
+        document.getElementById("trendTitle").textContent =
+          "Export Trend (2015 – 2024)";
+        document.getElementById("trendSub").textContent =
+          "Select a destination above to view trend";
+        if (state.trendChart) {
+          state.trendChart.destroy();
+          state.trendChart = null;
+        }
+      }
+
+      function renderTrend() {
+        const m = state.markets.find((x) => x.code === state.selectedCode);
+        if (!m) {
+          resetTrendView();
+          return;
+        }
+
+        document.getElementById("trendEmpty").style.display = "none";
+        document.getElementById("trendContent").style.display = "block";
+
+        document.getElementById("trendTitle").innerHTML =
+          `<span style="font-size:18px;margin-right:4px;">${m.flag}</span>` +
+          `Exports to ${m.name} (2015 – 2024)` +
+          (m.fta
+            ? `<span class="fta-tag" style="margin-left:8px;">${m.fta}</span>`
+            : "");
+        document.getElementById("trendSub").textContent =
+          m.region.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase()) +
+          " · " +
+          m.share.toFixed(1) +
+          "% of total";
+
+        // Stats
+        const v2024 = m.trend[9];
+        const v2015 = m.trend[0];
+        const cagr = Math.pow(v2024 / v2015, 1 / 9) - 1;
+        const peakIdx = m.trend.indexOf(Math.max(...m.trend));
+        const peakYear = 2015 + peakIdx;
+
+        document.getElementById("trendLatest").textContent = formatSGD(v2024);
+
+        const cagrEl = document.getElementById("trendCAGR");
+        cagrEl.textContent =
+          (cagr >= 0 ? "+" : "") + (cagr * 100).toFixed(1) + "%";
+        cagrEl.className = "trend-stat-value " + (cagr >= 0 ? "up" : "down");
+
+        document.getElementById("trendPeak").textContent = peakYear;
+
+        const ftaEl = document.getElementById("trendFTA");
+        if (m.fta) {
+          ftaEl.textContent = m.fta;
+          ftaEl.style.color = "var(--dos-success)";
+          ftaEl.style.fontSize = "14px";
+        } else {
+          ftaEl.textContent = "None";
+          ftaEl.style.color = "var(--dos-gray-500)";
+          ftaEl.style.fontSize = "14px";
+        }
+
+        // Line chart
+        const canvas = document.getElementById("trendChart");
+        if (state.trendChart) state.trendChart.destroy();
+
+        const years = [
+          "2015",
+          "2016",
+          "2017",
+          "2018",
+          "2019",
+          "2020",
+          "2021",
+          "2022",
+          "2023",
+          "2024",
+        ];
+        const color = cagr >= 0 ? "#0a7c42" : "#cf152d";
+
+        state.trendChart = new Chart(canvas.getContext("2d"), {
+          type: "line",
+          data: {
+            labels: years,
+            datasets: [
+              {
+                label: "Exports (SGD M)",
+                data: m.trend.map((v) => v),
+                borderColor: color,
+                backgroundColor: color + "20",
+                borderWidth: 2.5,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: color,
+                pointBorderColor: "#fff",
+                pointBorderWidth: 2,
+                fill: true,
+                tension: 0.25,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: "#1f2937",
+                padding: 10,
+                titleFont: { family: "Source Sans 3", size: 13, weight: "600" },
+                bodyFont: { family: "Source Sans 3", size: 12 },
+                callbacks: {
+                  label: (ctx) => "Exports: " + formatSGD(ctx.parsed.y),
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: false,
+                grid: { color: "#e8eaed" },
+                ticks: {
+                  font: { family: "Source Sans 3", size: 11 },
+                  color: "#6b7280",
+                  callback: (v) => formatSGD(v),
+                },
+              },
+              x: {
+                grid: { display: false },
+                ticks: {
+                  font: { family: "Source Sans 3", size: 11 },
+                  color: "#6b7280",
+                },
+              },
+            },
+          },
+        });
+
+        // Scroll the trend card into view on mobile
+        if (window.innerWidth <= 960) {
+          setTimeout(() => {
+            document
+              .getElementById("trendContent")
+              .scrollIntoView({ behavior: "smooth", block: "start" });
+          }, 100);
+        }
+      }
+    </script>
+  </body>
+</html>
