@@ -439,7 +439,7 @@
       /* ── KPI CARDS ── */
       .kpi-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
         margin-bottom: 20px;
       }
@@ -457,9 +457,7 @@
       .kpi-card.success {
         border-left-color: var(--dos-success);
       }
-      .kpi-card.warning {
-        border-left-color: var(--dos-warning);
-      }
+
       .kpi-label {
         font-size: 11px;
         font-weight: 600;
@@ -713,75 +711,6 @@
         color: var(--dos-success);
       }
       .trend-stat-value.down {
-        color: var(--dos-red);
-      }
-
-      /* HHI bar */
-      .hhi-bar-wrap {
-        margin-top: 14px;
-        padding: 12px 14px;
-        background: var(--dos-gray-100);
-        border-radius: var(--radius);
-      }
-      .hhi-bar-title {
-        font-size: 12px;
-        font-weight: 600;
-        color: var(--dos-gray-700);
-        margin-bottom: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .hhi-bar-track {
-        position: relative;
-        height: 10px;
-        background: linear-gradient(
-          90deg,
-          var(--dos-success) 0%,
-          var(--dos-success) 30%,
-          var(--dos-warning) 30%,
-          var(--dos-warning) 60%,
-          var(--dos-red) 60%,
-          var(--dos-red) 100%
-        );
-        border-radius: 5px;
-      }
-      .hhi-marker {
-        position: absolute;
-        top: -3px;
-        width: 4px;
-        height: 16px;
-        background: var(--dos-gray-900);
-        border-radius: 2px;
-        transform: translateX(-50%);
-        transition: left 0.4s ease;
-      }
-      .hhi-bar-labels {
-        display: flex;
-        justify-content: space-between;
-        font-size: 10px;
-        color: var(--dos-gray-500);
-        margin-top: 6px;
-      }
-      .concentration-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 8px;
-        border-radius: 10px;
-        font-size: 11px;
-        font-weight: 700;
-      }
-      .concentration-badge.low {
-        background: var(--dos-success-pale);
-        color: var(--dos-success);
-      }
-      .concentration-badge.med {
-        background: var(--dos-warning-pale);
-        color: var(--dos-warning);
-      }
-      .concentration-badge.high {
-        background: #fde7ea;
         color: var(--dos-red);
       }
 
@@ -1183,43 +1112,6 @@
                       <div class="kpi-label">Export Markets</div>
                       <div class="kpi-value" id="kpiMarkets">–</div>
                       <div class="kpi-sub">destinations reached</div>
-                    </div>
-                    <div class="kpi-card warning">
-                      <div class="kpi-label">
-                        HHI
-                        <span class="info-tip"
-                          >i
-                          <span class="tip-body">
-                            <strong>Herfindahl-Hirschman Index</strong> measures
-                            market concentration. Sum of squared share of each
-                            destination. &lt;1,500 = low concentration, 1,500 –
-                            2,500 = moderate, &gt;2,500 = high.
-                          </span>
-                        </span>
-                      </div>
-                      <div class="kpi-value" id="kpiHHI">–</div>
-                      <div class="kpi-sub" id="kpiHHISub">concentration</div>
-                    </div>
-                  </div>
-
-                  <!-- HHI concentration bar -->
-                  <div class="hhi-bar-wrap">
-                    <div class="hhi-bar-title">
-                      <span>Export Destination Concentration</span>
-                      <span class="concentration-badge" id="concBadge">–</span>
-                    </div>
-                    <div class="hhi-bar-track">
-                      <div
-                        class="hhi-marker"
-                        id="hhiMarker"
-                        style="left: 0%"
-                      ></div>
-                    </div>
-                    <div class="hhi-bar-labels">
-                      <span>Diversified (0)</span>
-                      <span>Moderate (1,500)</span>
-                      <span>Concentrated (2,500)</span>
-                      <span>Monopoly (10,000)</span>
                     </div>
                   </div>
 
@@ -1962,11 +1854,6 @@
       function formatNum(n) {
         return n.toLocaleString();
       }
-      function concentrationLabel(hhi) {
-        if (hhi < 1500) return { label: "Diversified", cls: "low" };
-        if (hhi < 2500) return { label: "Moderate", cls: "med" };
-        return { label: "Concentrated", cls: "high" };
-      }
 
       // Chart color palette — DOS-ish
       const PALETTE = [
@@ -2076,18 +1963,6 @@
         document.getElementById("kpiExportsSub").textContent =
           "SGD · 2024 aggregate";
         document.getElementById("kpiMarkets").textContent = p.markets.length;
-        document.getElementById("kpiHHI").textContent = formatNum(p.hhi);
-        const conc = concentrationLabel(p.hhi);
-        document.getElementById("kpiHHISub").textContent =
-          conc.label.toLowerCase();
-
-        const badge = document.getElementById("concBadge");
-        badge.textContent = conc.label;
-        badge.className = "concentration-badge " + conc.cls;
-
-        // HHI marker position — cap at 10000 = 100%
-        const pctPos = Math.min(100, (p.hhi / 10000) * 100);
-        document.getElementById("hhiMarker").style.left = pctPos + "%";
 
         document.getElementById("resultsCount").textContent =
           formatNum(p.totalMatching) +
